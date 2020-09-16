@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript菜鳥研究室</title>
+    <link rel="stylesheet" href="css/all.css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/minireset.css/0.0.2/minireset.min.css' />
+    <!-- 忽略前後位置，會顯示axios is not define -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 串接Leaflet API -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <h2>國家風景區 地理資訊網</h2>
+            <div id='map'></div>
+            <select class="searcharea" id="areaId">
+                <option value="">請選擇行政區</option>
+                <option value="羅東林區管理處">羅東林區管理處</option>
+                <option value="新竹林區管理處">新竹林區管理處</option>
+                <option value="東勢林區管理處">東勢林區管理處</option>
+                <option value="南投林區管理處">南投林區管理處</option>
+                <option value="花蓮林區管理處">花蓮林區管理處</option>
+                <option value="嘉義林區管理處">嘉義林區管理處</option>
+                <option value="屏東林區管理處">屏東林區管理處</option>
+                <option value="台東林區管理處">台東林區管理處</option>
+            </select>
+            <div class="content">
+                <ul class="TR_Content"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 建立Leaflet地圖，設定經緯度座標，預設縮放值
+        var map = L.map('map',{
+            center:[23.516565, 120.894241],
+            zoom: 11
+        });
+        // 設定圖資來源
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/satellite-streets-v11', //地圖樣式
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1Ijoia2VudHNoZW4iLCJhIjoiY2tleHg3dmJkMHUyMjMzbjR1cm5kMXlrZCJ9.5mGTDOSBrqxXQqGBu45GlA'
+        }).addTo(map);
+
+        // 增加複數標籤
+        var Alisan = L.marker([23.505610, 120.789476]).addTo(map);
+        Alisan.bindPopup('<strong>阿里山</strong><p>標高2,216公尺，四周高山環列，氣候涼爽，以日出、雲海、晚霞、森林、鐵路並列為阿里山五奇，聞名國際。</p>');
+
+        var Jade_M = L.marker([23.488538, 120.959683]).addTo(map);
+        Jade_M.bindPopup('<strong>玉山主峰</strong><p>玉山主峰山貌高峻，四面皆是陡壁危崖，南北兩側是千仞峭壁，西側絕壑深溝，東側則是碎石陡坡。</p>');
+
+        var Batongguan = L.marker([23.556510, 120.926696]).addTo(map);
+        Batongguan.bindPopup('<strong>八通關古道</strong><p>全長約152公里，建於西元1875年，是台灣清治時期所建橫貫台灣本島東西部的三條道路之一，獲內政部頒訂為國家一級古蹟。</p>');
+
+        var Deer_M = L.marker([23.474602, 120.879111]).addTo(map);
+        Deer_M.bindPopup('<strong>真鹿林山</strong><p>標高2862公尺，山頂有顆編號4153號的三等三角點基石，並設有中央大學鹿林天文台，視野極佳，可眺望玉山群峰。</p>');
+
+        // 增加事件：點擊時顯示經緯度
+        var popup = L.popup();
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("經緯度座標：" + e.latlng.toString())
+                .openOn(map);
+        }
+        map.on('click', onMapClick);
+
+        // 增加圓圈
+        // var circle = L.circle(
+        //     [23.488538, 120.959683], // 圓心座標
+        //     1000, // 半徑（公尺）
+        //     {
+        //         color: 'red', // 線條顏色
+        //         fillColor: '#f03', // 填充顏色
+        //         fillOpacity: 0.5 // 透明度
+        //     }
+        // ).addTo(map);
+        // 增加多邊形
+        // var polygon = L.polygon([
+        //     [23.464, 120.945], //左上
+        //     [23.463, 120.978], //右上
+        //     [23.456, 120.964], //右下
+        //     [23.452, 120.947], //左下
+        // ]).addTo(map);
+        // polygon.bindPopup('這裡有寶藏');
+
+        // 建立獨立的訊息方塊，而非標註在maker、圓形或多邊形之上)
+        // var popup = L.popup()
+        //     .setLatLng([23.010, 120.289])
+        //     .setContent("獨立的訊息方塊。")
+        //     .openOn(map);
+    </script>
+
+    <script src="js/all.js">
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.container {
+    max-width: 940px;
+    margin: 10px auto;
+    .row {
+        display: flex;
+        flex-direction: column;
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: #f8f6ed;
+            color: olivedrab;
+            font-weight: 600;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        .searcharea {
+            width: 160px;
+            height: 2rem;
+            font-size: 1rem;
+            margin-top:0.5rem;
+            margin-bottom: 0.5rem;
+            // 因為沒辦法使用text-align:center所以用推擠的方式讓文字置中
+            padding: 0 0 0 8px;
+            outline:none;
+        }
+        .content {
+            ul {
+                li {
+                    padding: 0.5rem;
+                    margin-bottom: 0.5rem;
+                    line-height: 2;
+                    background: #f8f6ed;
+                    color: olivedrab;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
+#map {
+    width: 940px;
+    height: 400px;
+}
